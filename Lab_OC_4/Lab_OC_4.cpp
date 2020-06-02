@@ -97,7 +97,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
 
-   HWND hWnd = CreateWindowW(szWindowClass, (LPCWSTR)L"Задание 3", WS_SYSMENU | WS_CAPTION,
+   HWND hWnd = CreateWindowW(szWindowClass, (LPCWSTR)L"Задание 4", WS_SYSMENU | WS_CAPTION,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -150,8 +150,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             xPos = LOWORD(lParam);
             yPos = HIWORD(lParam);
 
-            wsprintfA(str, "Координаты курсора мыши:\n x=%d; y=%d", xPos, yPos);
-            MessageBoxA(hWnd, str, "Левая кнопка", MB_OK | MB_ICONINFORMATION);
+            wsprintfA(str, "Вывести координаты?");
+            MessageBoxA(hWnd, str, "Левая кнопка", MB_YESNO | MB_ICONQUESTION);
+
+            if (IDYES) {
+                wsprintfA(str, "Координаты курсора мыши:\n x=%d; y=%d", xPos, yPos);
+                MessageBoxA(hWnd, str, "Левая кнопка", MB_OK | MB_ICONINFORMATION);
+            }
         }
         break;
     case WM_PAINT:
