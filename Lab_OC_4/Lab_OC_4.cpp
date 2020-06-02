@@ -74,8 +74,8 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_LABOC4));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+    wcex.hCursor        = LoadCursor(nullptr, IDC_HELP);
+    wcex.hbrBackground  = CreateSolidBrush(RGB(225, 123, 234));
     wcex.lpszMenuName   = NULL;
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -97,7 +97,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   HWND hWnd = CreateWindowW(szWindowClass, (LPCWSTR)L"Задание 3", WS_SYSMENU | WS_CAPTION,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -123,6 +123,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    char str[40];
+    int xPos, yPos;
+
     switch (message)
     {
     case WM_COMMAND:
@@ -140,6 +143,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
+        }
+        break;
+    case WM_LBUTTONDOWN:
+        {
+            xPos = LOWORD(lParam);
+            yPos = HIWORD(lParam);
+
+            wsprintfA(str, "Координаты курсора мыши:\n x=%d; y=%d", xPos, yPos);
+            MessageBoxA(hWnd, str, "Левая кнопка", MB_OK | MB_ICONINFORMATION);
         }
         break;
     case WM_PAINT:
