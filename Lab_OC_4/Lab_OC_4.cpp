@@ -97,7 +97,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
 
-   HWND hWnd = CreateWindowW(szWindowClass, (LPCWSTR)L"Задание 4", WS_SYSMENU | WS_CAPTION,
+   HWND hWnd = CreateWindowW(szWindowClass, (LPCWSTR)L"Задание 5", WS_SYSMENU | WS_CAPTION,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -159,11 +159,49 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+    case WM_RBUTTONDOWN:
+    {
+       HDC hdc = GetDC(hWnd);
+
+       SetBkMode(hdc, TRANSPARENT);
+       SetTextColor(hdc, 0xff0000);
+
+       TextOut(hdc, 200, 200, L"Сообщение WM_RBUTTONDOWN", 24);
+       ReleaseDC(hWnd, hdc);
+       return 0;
+    }
+    break;
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Добавьте сюда любой код прорисовки, использующий HDC...
+
+            HGDIOBJ original = NULL;
+            original = SelectObject(hdc, GetStockObject(DC_PEN));
+            TextOut(hdc, 10, 20, L"Сообщение WM_PAINT", 18);
+
+            SetTextAlign(hdc, TA_CENTER);
+
+            SelectObject(hdc, GetStockObject(BLACK_PEN));
+            Rectangle(hdc, 0, 0, 200, 200);
+
+            SelectObject(hdc, GetStockObject(DC_PEN));
+            SelectObject(hdc, GetStockObject(DC_BRUSH));
+
+            SetDCBrushColor(hdc, RGB(255, 0, 0));
+            SetDCPenColor(hdc, RGB(0, 0, 255));
+
+            SetDCBrushColor(hdc, RGB(255, 0, 0));
+            Rectangle(hdc, 100, 300, 200, 400);
+
+            SetDCBrushColor(hdc, RGB(0, 255, 0));
+            Rectangle(hdc, 300, 150, 500, 300);
+
+            SetDCBrushColor(hdc, RGB(0, 255, 0));
+            Ellipse(hdc, 400, 400, 300, 300);
+
+            SelectObject(hdc, original);
+
             EndPaint(hWnd, &ps);
         }
         break;
@@ -175,6 +213,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return 0;
 }
+
 
 // Обработчик сообщений для окна "О программе".
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
